@@ -4,7 +4,7 @@ const router = express.Router();
 
 const authController = require("../../controllers/auth");
 
-const { validateReqBody } = require("../../middlewares");
+const { validateReqBody, authenticate } = require("../../middlewares");
 
 const { schemas } = require("../../models/users/user");
 
@@ -21,5 +21,13 @@ router.post(
   validateReqBody(schemas.loginSchema),
   controllersWrapper(authController.login)
 );
+
+router.get(
+  "/current",
+  authenticate,
+  controllersWrapper(authController.checkCurrent)
+);
+
+router.get("/logout", authenticate, controllersWrapper(authController.logout));
 
 module.exports = router;
