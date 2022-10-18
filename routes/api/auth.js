@@ -30,4 +30,11 @@ router.get(
 
 router.get("/logout", authenticate, controllersWrapper(authController.logout));
 
+router.patch(
+  "/",
+  authenticate,
+  validateReqBody(schemas.subscribeSchema),
+  controllersWrapper(authController.updateSubscription)
+);
+
 module.exports = router;

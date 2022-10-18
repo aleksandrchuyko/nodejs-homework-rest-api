@@ -7,6 +7,7 @@ const regexp = {
   email:
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 };
+const subscriptions = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
@@ -23,13 +24,13 @@ const userSchema = new Schema(
     },
     subscription: {
       type: String,
-      enum: ["starter", "pro", "business"],
+      enum: subscriptions,
       default: "starter",
     },
     token: {
       type: String,
       default: "",
-    }
+    },
   },
   { timestamps: true, versionKey: false }
 );
@@ -39,19 +40,24 @@ userSchema.post("save", handleMongoSaveError);
 const User = model("user", userSchema);
 
 const registerSchema = Joi.object({
-    email: Joi.string().pattern(regexp.email).required(),
-    password: Joi.string().min(8).required(),
+  email: Joi.string().pattern(regexp.email).required(),
+  password: Joi.string().min(8).required(),
 });
 
 const loginSchema = Joi.object({
-    email: Joi.string().pattern(regexp.email).required(),
-    password: Joi.string().min(8).required(),
+  email: Joi.string().pattern(regexp.email).required(),
+  password: Joi.string().min(8).required(),
+});
+
+const subscribeSchema = Joi.object({
+  subscription: Joi.string().valid(...subscriptions),
 });
 
 const schemas = {
-    registerSchema,
-    loginSchema
-}
+  registerSchema,
+  loginSchema,
+  subscribeSchema,
+};
 
 module.exports = {
   User,
