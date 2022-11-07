@@ -23,11 +23,11 @@ const register = async (req, res) => {
     avatarURL,
     verificationToken,
   });
-
+  const verificationUrl = `${BASE_URL}/api/users/verify/${verificationToken}`;
   const mail = {
     to: email,
     subject: "Email verification",
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click to finish verification</a>`,
+    html: `<a target="_blank" href="${verificationUrl}" >Click to finish verification</a>`,
   };
 
   await sendEmail(mail);
